@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="64" height="48" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="brick" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/brick.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="froze" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/froze.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="grass" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/grass.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="4" name="steel" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/steel.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="5" name="water_0" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/water_0.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="6" name="castle-standing" tilewidth="16" tileheight="16">
+  <image source="../images/common-sheet/castle-standing.png" width="128" height="116"/>
+ </tileset>
+ <tileset firstgid="62" name="bg_content_ground_tank" tilewidth="16" tileheight="16">
+  <image source="../images/common-sheet/bg_content_ground_tank.png" width="319" height="203"/>
+ </tileset>
+ <tileset firstgid="290" name="layer_right" tilewidth="16" tileheight="16">
+  <image source="../images/terrain-sheet/layer_right.png" width="512" height="512"/>
+ </tileset>
+ <layer name="Layer" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt2csSwyAIheH09v6v3FU2Z3SABrXE/9vRZFK0Ui85DmBfj9UJTLZbe2fRfn0lx/xuQL7nxesnrc/RcU9We4AdWPN2r+6i87H1XL1u8ebFOgLw89bl7Pneux6g3gG/jxFr/Vj392L9/O28LxpH8wXQF12XrzY6X/3fmt0/+n2aD2L0PKj6+VD2eKxW/6Ot3udEz0XvNr6zWf1TbfxXyxdjXa3/auOpWr7AP/tl/dGqQWvf1NrHtJ6T9Z4YgK1aPVXLF1jpbvNptD1fbmEA8g==
+  </data>
+ </layer>
+ <layer name="background" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJztwzENAAAMA6BOfl3Xxg5I6CVVVVVVVVVVVVVVVVVfHy4KeFs=
+  </data>
+ </layer>
+ <layer name="Brick" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt2MsKgCAQBdD6/59uH4QyOj7ynJ3kwFhc1K4LznXPbmCw09Y7SvZ79d1gXe98Zo+BdqVcfT1vzWNWfXQ9QH0+Ru/30fOAvEPcbvnZrV8AYH2z7zn+iwIA2VY7f6zWD/xZJE81Nb3m9KiBU/XYT0dlLtJLafwAYCsAPQ==
+  </data>
+ </layer>
+ <layer name="frozen" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt2CEOACAMA8CF/z8agUNgZpZyZ6fWVLUKAOAvq3mfJu0fAAAAAHruPcg+RBL9fpMPyfQbAADg2GzeABk=
+  </data>
+ </layer>
+ <layer name="water" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJztzLkJADAMBEEl7r9lVWD0ZDYz2cGxEQAAAAAAfzrFnv5vu9vd9qtu9w8AAAAAAMDbEnGZAEc=
+  </data>
+ </layer>
+ <layer name="grass" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt1UkKwCAQBEAh//9zXiBJYFzaVN0EcfrQMq0BUOkqPgMA44zau0/vrpoL9KX9n7S8ALCjtH06O+/p88hS3Q9948/S+p+Wl72l9SktL5zmzR+sugMA8NUNc6kASQ==
+  </data>
+ </layer>
+ <layer name="steel" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt17EJAEAIBEED+6/5SxBBXoOZCjY6uAgAAAAAACbldgBA07XdutYDAABQ/RQ/BgD45QGKrwAV
+  </data>
+ </layer>
+</map>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="64" height="64" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="grass" tilewidth="64" tileheight="64">
+  <image source="../../../../Resources/images/terrain-sheet/grass.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="brick" tilewidth="64" tileheight="64">
+  <image source="../../../../Resources/images/terrain-sheet/brick.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="froze" tilewidth="64" tileheight="64">
+  <image source="../../../../Resources/images/terrain-sheet/froze.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="4" name="steel" tilewidth="64" tileheight="64">
+  <image source="../../../../Resources/images/terrain-sheet/steel.png" width="64" height="64"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="64" height="64" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt29EOgjAMhWGGvv8ze8nSZDup7cig/3e3LGAnHqY0HgdQ11l8DFRm89DM+GPG34W1/KuvydZr10P+5+z7hXdTebB52h35jyH/76Kup3f/352ql/xjJvvzb8/nHUd58/905B8RKv/e+4E6fvX5q+VfqbZexOz4vGtG1cvzcKAu8g/URf6Busg/UFd2/kf9w9bNz15T1UP/HsiTnf9of7M556L9Ue4fwEX1C9R8tL+Z3R+NrgeoRH3ffjp+PwBjq/Pv3W+z92fyD4zt9n/bu+v5ARlnARA=
+  </data>
+ </layer>
+ <objectgroup name="Tank1"/>
+ <objectgroup name="Bullet"/>
+ <layer name="Tile Layer 2" width="64" height="64">
+  <data encoding="base64" compression="zlib">
+   eJzt2kEOgkAQRUH0/od2ScKiMWKUyas6Qf/Fm7Bg22D3+PcBX3a25/mTK+6jthcmtR5qe2FS6+HK3jt9G97pFlhF7b0DdvqHLv1Dl/6hS//QpX/Y1Xqo7YVJrYfaXpjUeqjthUmth9pemNR6qO3lc6v8Y33lzloPtb0wOfawypv3ruOe494X/LYAPQ==
+  </data>
+ </layer>
+</map>

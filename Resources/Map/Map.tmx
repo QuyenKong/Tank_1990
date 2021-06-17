@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="64" height="48" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="brick" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/brick.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="grass" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/grass.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="froze" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/froze.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="4" name="steel" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/steel.png" width="64" height="64"/>
+ </tileset>
+ <layer name="Tile Layer 1" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt1UkOgCAQBEBc/v8Gn2q8EjXCENyqbhMEhkiHlAD+a0hpOauPxlrNK51fujecaXV3ouuU3P+71PZRk3n6+MI/iJyh9h3L60h+t3HvHwAAAEAfU+P67X3An+S5GYP1nvnCN9F95R/6Gx62DtCP/MN75DlrXdd6al9fsgJQlRPI
+  </data>
+ </layer>
+ <objectgroup name="Tank"/>
+ <objectgroup name="Bullet"/>
+</map>

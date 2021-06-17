@@ -1,0 +1,25 @@
+{
+  "--png-opt-level": 0,
+  "--opt": "RGBA8888",
+  "--format": "cocos2d",
+  "--trim-mode": "Trim",
+  "--texture-format": "pvr2ccz",
+  "--content-protection": "d3f6e82be33b99d6dfef05c35d1a3399",
+  "--inner-padding": 0,
+  "--algorithm": "MaxRects",
+  "--size-constraints": "POT",
+  "--extrude": 1,
+  "--maxrects-heuristics": "Best",
+  "--shape-padding": 4,
+  "rotation": true,
+  "--variant": [
+    "0.25:iphone",
+    "0.50:iphonehd",
+    "1.00:ipadhd"
+  ],
+  "--max-height": 2048,
+  "--max-width": 2048,
+  "--scale-mode": "Smooth",
+  "--pack-mode": "Best",
+  "--border-padding": 2
+}

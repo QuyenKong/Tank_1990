@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-up" width="64" height="48" tilewidth="16" tileheight="16">
+ <tileset firstgid="1" name="brick" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/brick.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="2" name="froze" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/froze.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="3" name="grass" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/grass.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="4" name="steel" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/steel.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="5" name="water_0" tilewidth="64" tileheight="64">
+  <image source="../images/terrain-sheet/water_0.png" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="6" name="layer_right" tilewidth="16" tileheight="16">
+  <image source="../images/terrain-sheet/layer_right.png" width="512" height="512"/>
+ </tileset>
+ <tileset firstgid="1030" name="vi3" tilewidth="32" tileheight="32">
+  <image source="../images/common-sheet/vi3.png" trans="ff00ff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="1034" name="vi" tilewidth="64" tileheight="64">
+  <image source="../images/common-sheet/vi.png" trans="ff00ff" width="140" height="140"/>
+ </tileset>
+ <layer name="Layer" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt2csSwyAIheH09v6v3FU2Z3SABrXE/9vRZFK0Ui85DmBfj9UJTLZbe2fRfn0lx/xuQL7nxesnrc/RcU9We4AdWPN2r+6i87H1XL1u8ebFOgLw89bl7Pneux6g3gG/jxFr/Vj392L9/O28LxpH8wXQF12XrzY6X/3fmt0/+n2aD2L0PKj6+VD2eKxW/6Ot3udEz0XvNr6zWf1TbfxXyxdjXa3/auOpWr7AP/tl/dGqQWvf1NrHtJ6T9Z4YgK1aPVXLF1jpbvNptD1fbmEA8g==
+  </data>
+ </layer>
+ <layer name="background" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJztwzENAAAMBKEz/P7X2ugACaumqqqqqqqqqqqqqqq+fphfHEw=
+  </data>
+ </layer>
+ <layer name="brick" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt19EKgCAMAED7/5/uXYhKcU69e5MQN3XkSoFzXbMDCHZavlFG76tzg7zq+hw9Bvq91dXT9956HDW/NR/gu+j/vfcAxFutzlaLFwDIb3afow8CAEbL9v7IFg9r2/3+9ObXuh+z+prdzg9maq3Lv/Oi1qndQksAQQ==
+  </data>
+ </layer>
+ <layer name="frozen" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt2MEJACEUQ0HZ/ou2A+EjwpLM3Dy+QxBdCwCgyzc8/11aDwC80HYftvXCSdse2nrhJP19PP0PaOuHZun7SO+DG+n7SO+DG+n7SO8DAJjaiCsAPQ==
+  </data>
+ </layer>
+ <layer name="water" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJztzLkNAAAIAzEa9l+ZEXha7C6KdBEAAAAAAD/k8p/uaffa77oAAAAAAAD8UGg6AD0=
+  </data>
+ </layer>
+ <objectgroup name="PlayerSpawn">
+  <object name="SpawnPoint" x="44" y="716" width="16" height="16" rotation="-0.165648"/>
+ </objectgroup>
+ <layer name="grass" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt1UkKwCAQBEAh//9zXiBJYFzaVN0EcfrQMq0BUOkqPgMA44zau0/vrpoL9KX9n7S8ALCjtH06O+/p88hS3Q9948/S+p+Wl72l9SktL5zmzR+sugMA8NUNc6kASQ==
+  </data>
+ </layer>
+ <layer name="steel" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt17ENACAIBEAK9p/ZEWyIIt5N8BRP8hEAAAAAf8nbAYpNuwcm0EvgNd3+Vrc8AAAAu51ixwAApyx+/gAd
+  </data>
+ </layer>
+ <objectgroup name="AISpawn">
+  <object name="SpawnAIPoint" x="856" y="44" width="16" height="16" rotation="-271.655"/>
+ </objectgroup>
+ <layer name="VN" width="64" height="48" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJzt0ykOACAQA8AVKI7/fxcNIUGg2My4JjUVjQAAAAAAAAAAAACAf9Sy5lbOvV9l3wcv+vaHkewft30TWa8AfQ==
+  </data>
+ </layer>
+ <layer name="flag" width="64" height="48">
+  <data encoding="base64" compression="zlib">
+   eJzt0SsOACAQQ8EVGz73vzACNLZmxtQ2eVUAAAAAAAAAAAAAAPyMvjs7+4OM9brvcP8DcaAALw==
+  </data>
+ </layer>
+</map>

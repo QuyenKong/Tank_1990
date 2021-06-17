@@ -1,0 +1,31 @@
+{
+  "--png-opt-level": 0,
+  "--opt": "RGBA8888",
+  "--format": "cocos2d",
+  "--trim-mode": "None",
+  "--texture-format": "png",
+  "--content-protection":"",
+  "--inner-padding": 0,
+  "--algorithm": "Basic",
+  "--size-constraints": "AnySize",
+  "--scale-mode": "Smooth",
+  "--pack-mode": "Best",
+  "--basic-sort-by": "Name",
+  "--basic-order": "Ascending",
+  "--shape-padding": 0,
+  "--border-padding": 0,
+  "auto_alias": false,
+  "sheet_extension": "png",
+  "input_directories":["images"],
+  "output_path": ["{v}", "terrain-city"],
+  "--extrude": 2,
+  "--width": 768,
+  "--height": 960,
+  "--variant": [
+    "0.25:iphone",
+    "0.50:iphonehd",
+    "1.00:ipadhd"
+  ],
+  "rotation": false,
+  "force_identical_layout": true
+}
