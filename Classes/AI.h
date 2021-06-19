@@ -6,19 +6,18 @@
 using namespace cocos2d;
 
 class AI {
-
 private:
-    int _n = 64; 
-    int _m = 48;
-   
-    int _d;
+	CCSprite* _ai;
+	bool g_aiIsMoving = true;
+	bool g_playerIsMoving = true;
+	int tankSpeed = 2;
+	int g_aiDr;
+	int collisionBitmask;
+	int maskAi;
+	int maskBullet;
 public:
-    int _a[100][100];
-    CCSprite* _player;
-    void moveToX(Point* x, int k);
-    void tryBack(Point* x, int k, Point f);
-    void path(Point start, Point finish);
-    void loadGrid(int a[100][100]);
+	//Constructors
+	AI(String a, int x, int y, int maskAi, int maskBullet);
 
 };
 

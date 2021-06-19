@@ -36,6 +36,8 @@ bool GameOverScene::init()
     if (result == 1) {//win
         auto backgroundSprite = Sprite::create("images/common-sheet/win.jpg");
         backgroundSprite->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+        backgroundSprite->setScale(1.2);
+
         this->addChild(backgroundSprite);
 
     }

@@ -88,7 +88,9 @@ private:
 
     bool onTouchBegan(cocos2d::Touch* touches, cocos2d::Event* event);
         
-    void spriteMoveFinished(Node* sender);
+    void spriteMovePlayerFinished(Node* sender);
+
+    void spriteAIMoveFinished(Node* sender);
 
     void setPlayerPosition(CCPoint position);
 

@@ -26,6 +26,7 @@
 #include "SimpleAudioEngine.h"
 #include "Joystick.h"
 #include <GameOverScene.h>
+#include <AI.h>
 
 USING_NS_CC;
 
@@ -43,19 +44,18 @@ USING_NS_CC;
 #define AI_MASK 19
 
 int g_aiDr;
-bool g_isFinish = false;
+bool g_playerIsShot = false;
 bool g_aiIsShot = false;
 bool g_aiIsMoving = true;
 bool g_playerIsMoving = true;
 int tankSpeed = 2;
-int a[100][100] = {0};
 
 Scene* HelloWorld::createScene()
 {
     auto scene = Scene::createWithPhysics();
 
-    scene->getPhysicsWorld();
-        //->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // Used to see the physical engine components of the elf after running
+    scene->getPhysicsWorld()
+        ->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // Used to see the physical engine components of the elf after running
     auto layer = HelloWorld::create();
 
     scene->addChild(layer);
@@ -80,7 +80,7 @@ bool HelloWorld::init()
     {
         return false;
     }
-
+    
    
      _visibleSize = Director::getInstance()->getVisibleSize();
      _origin = Director::getInstance()->getVisibleOrigin();
@@ -145,8 +145,10 @@ bool HelloWorld::init()
      auto spawnPoint1 = objects1->getObject("SpawnAIPoint");
      CCASSERT(!spawnPoint1.empty(), "PlayerShowUpPoint object not found");
 
+
      int x1 = spawnPoint1["x"].asInt();
      int y1 = spawnPoint1["y"].asInt();
+     
 
      _ai = Sprite::create("images/tank-1-sheet/tank-ss-panther-6-0-1-3.png");
      _ai->setPosition(x1 + _tileMap->getTileSize().width / 2, y1 + _tileMap->getTileSize().height / 2);
@@ -237,7 +239,7 @@ bool HelloWorld::init()
                  _tile[_lastTile] = _steel->tileAt(ccp(i, j));
                  if (_tile[_lastTile]) // is not all positions, if there is no tile, it is empty
                  {
-                     a[i][j] = 1;//set a[i][j] = 1 để tìm đường đi tránh những điểm là 1 trong mảng
+                    // a[i][j] = 1;//set a[i][j] = 1 để tìm đường đi tránh những điểm là 1 trong mảng
                      auto boxPhysicsBody = PhysicsBody::createBox(_tile[_lastTile]->getContentSize()); // Setting PhysicsBody components
                      boxPhysicsBody->setDynamic(false);
                      boxPhysicsBody->setCollisionBitmask(STEEL_MASK);
@@ -264,7 +266,7 @@ bool HelloWorld::init()
                  _tile[_lastTile] = _water->tileAt(ccp(i, j));
                  if (_tile[_lastTile]) // is not all positions, if there is no tile, it is empty
                  {
-                     a[i][j] = 1;//set a[i][j] = 1 để tìm đường đi tránh những điểm là 1 trong mảng
+                   //  a[i][j] = 1;//set a[i][j] = 1 để tìm đường đi tránh những điểm là 1 trong mảng
                      auto boxPhysicsBody = PhysicsBody::createBox(_tile[_lastTile]->getContentSize()); // Setting PhysicsBody components
                      boxPhysicsBody->setDynamic(false);
                      boxPhysicsBody->setCollisionBitmask(WATER_MASK);
@@ -466,10 +468,10 @@ bool HelloWorld::init()
     _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 
-    //this->scheduleUpdate();
-    this->schedule(schedule_selector(HelloWorld::updatePlayer), 0.01);
-    this->schedule(schedule_selector(HelloWorld::updateAI), 0.01);
-
+  // this->scheduleUpdate();
+  
+   _player->schedule(CC_CALLBACK_1(HelloWorld::updatePlayer, this), "player");
+   _ai->schedule(CC_CALLBACK_1(HelloWorld::updateAI,this), "ai");
     return true;
 }
 
@@ -506,12 +508,12 @@ void HelloWorld::onTouchMoved(Touch* touch, Event* event)
 void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
      
 
-    if (g_isFinish) {
+    if (g_playerIsShot) {
 
         return;
     }
 
-    g_isFinish = true;
+    g_playerIsShot = true;
 
     // Lấy tọa độ của điểm chạm
     
@@ -533,7 +535,7 @@ void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
         bullet->runAction(Sequence::create(
             animate,
             MoveBy::create(2, Point(0, _visibleSize.height)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)), NULL));
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMovePlayerFinished, this)), NULL));
             
         auto projectileBody = PhysicsBody::createBox(bullet->getContentSize());
         projectileBody->setCollisionBitmask(BULLET_MASK);
@@ -553,7 +555,7 @@ void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
         bullet->runAction(Sequence::create(
             animate,
             MoveBy::create(2, Point(0, -_visibleSize.height)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)), NULL));
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMovePlayerFinished, this)), NULL));
 
         auto projectileBody = PhysicsBody::createBox(bullet->getContentSize());
         projectileBody->setCollisionBitmask(BULLET_MASK);
@@ -581,7 +583,7 @@ void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
         bullet->runAction(Sequence::create(
             animate,
             MoveBy::create(2, Point(_visibleSize.width,0)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)), NULL));
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMovePlayerFinished, this)), NULL));
         
     }
     //Left
@@ -602,7 +604,7 @@ void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
         bullet->runAction(Sequence::create(
             animate,
             MoveBy::create(2, Point(-_visibleSize.width, 0)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)), NULL));
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMovePlayerFinished, this)), NULL));
     }
     
    
@@ -611,10 +613,18 @@ void HelloWorld::onTouchEnded(Touch* touches, Event* event) {
    // this->setViewPointCenter(_player->getPosition());
 
 }
-void HelloWorld::spriteMoveFinished(Node* sender)
+void HelloWorld::spriteMovePlayerFinished(Node* sender)
+{
+    g_playerIsShot = false;
+    // Ép kiểu Contrỏ Sprite của 1 Node*
+    auto sprite = (Sprite*)sender;
+    
+    this->removeChild(sprite, true);
+}
+
+void HelloWorld::spriteAIMoveFinished(Node* sender)
 {
     g_aiIsShot = false;
-    g_isFinish = false;
     // Ép kiểu Contrỏ Sprite của 1 Node*
     auto sprite = (Sprite*)sender;
     
@@ -729,7 +739,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
 
         b->getNode()->removeFromParent();
 
-        g_isFinish = false;
+        g_playerIsShot = false;
     }
     //BRICK contact with BULLET
     if (a->getCollisionBitmask() == BRICK_MASK & b->getCollisionBitmask() == BULLET_MASK)
@@ -746,9 +756,114 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         this->removeChild(b->getNode(), true);
         a->getNode()->removeFromParent();
 
-        g_isFinish = false;
+        g_playerIsShot = false;
     }
-    //BRICK contact with BULLET_AI
+  
+    //BULLET contact with STELL
+    if (a->getCollisionBitmask() == STEEL_MASK & b->getCollisionBitmask() == BULLET_MASK ||
+        a->getCollisionBitmask() == BULLET_MASK & b->getCollisionBitmask() == STEEL_MASK)
+    {
+        Point p = contact.getContactData()->points[0];
+
+        auto bulletExplor = Sprite::create("images/explosion-sheet/explosion-1.png");
+        Animate* animateExplor = Animate::create(AnimationCache::getInstance()->getAnimation("explorAnimation"));
+        bulletExplor->setScale(0.2);
+        bulletExplor->setPosition(p);
+        this->addChild(bulletExplor, 2);
+        bulletExplor->runAction(Sequence::createWithTwoActions(animateExplor, RemoveSelf::create()));
+        this->removeChild(a->getNode(), true);
+        g_playerIsShot = false;
+    }
+    //BULLET contact with FLAG
+
+    if (a->getCollisionBitmask() == FLAG_MASK & b->getCollisionBitmask() == BULLET_MASK ||
+        a->getCollisionBitmask() == BULLET_MASK & b->getCollisionBitmask() == FLAG_MASK)
+    {
+        Point p = contact.getContactData()->points[0];
+
+        auto bulletExplor = Sprite::create("images/explosion-sheet/explosion-1.png");
+        Animate* animateExplor = Animate::create(AnimationCache::getInstance()->getAnimation("explorAnimation"));
+        bulletExplor->setScale(0.2);
+        bulletExplor->setPosition(p);
+        this->addChild(bulletExplor, 2);
+        bulletExplor->runAction(Sequence::createWithTwoActions(animateExplor, RemoveSelf::create()));
+        this->removeChild(a->getNode(), true);
+
+        g_playerIsShot = false;
+
+        //load game over scene
+    }
+   
+    //TANK contact with BRICK
+    if ((a->getCollisionBitmask() == BRICK_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == BRICK_MASK))
+    {
+       // Point p = contact.getContactData()->points[0];
+        g_playerIsMoving = false;
+        if(_player->getRotation()==0){ _player->setPosition((_player->getPosition() + Vec2(0.0f,-tankSpeed))); }
+        if(_player->getRotation()==-90){ _player->setPosition((_player->getPosition() + Vec2(tankSpeed,0.0f))); }
+        if(_player->getRotation()==90){ _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
+        if(_player->getRotation()==180){ _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
+
+    }
+    
+    //TANK contact with 4 EDGE
+    if ((a->getCollisionBitmask() == OBSTACLE_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == OBSTACLE_MASK))
+    {
+        // Point p = contact.getContactData()->points[0];
+        g_playerIsMoving = false;
+        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
+        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
+
+    }
+ 
+    //TANK contact with STEEL
+    if ((a->getCollisionBitmask() == STEEL_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == STEEL_MASK))
+    {
+        g_playerIsMoving = false;
+        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
+        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
+
+    }
+   
+    
+    //TANK contact with GRASS
+    if ((a->getCollisionBitmask() == GRASS_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == GRASS_MASK))
+    {
+        _grass->setOpacity(0.4);
+        _grass->setZOrder(10);
+        _player->setZOrder(9);
+    }
+   
+    //TANK contact with WATER
+    if ((a->getCollisionBitmask() == WATER_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == WATER_MASK))
+    {
+        g_playerIsMoving = false;
+        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
+        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
+        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
+
+
+    }
+    
+    //TANK contact with FROZEN
+    if ((a->getCollisionBitmask() == FROZEN_MASK & b->getCollisionBitmask() == TANK_MASK) ||
+        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == FROZEN_MASK))
+    {
+        tankSpeed =1;
+    }
+    /*-----------------------------------------------------------------------------------------------------------------*/
+
+      //BRICK contact with BULLET_AI
     if (a->getCollisionBitmask() == BRICK_MASK & b->getCollisionBitmask() == BULLET_AI_MASK)
     {
         Point p = contact.getContactData()->points[0];
@@ -763,7 +878,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         this->removeChild(b->getNode(), true);
         a->getNode()->removeFromParent();
 
-       
+
         this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=] {
             g_aiIsShot = false; }), NULL));
     }
@@ -787,42 +902,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=] {
             g_aiIsShot = false; }), NULL));
     }
-    //BULLET contact with STELL
-    if (a->getCollisionBitmask() == STEEL_MASK & b->getCollisionBitmask() == BULLET_MASK ||
-        a->getCollisionBitmask() == BULLET_MASK & b->getCollisionBitmask() == STEEL_MASK)
-    {
-        Point p = contact.getContactData()->points[0];
-
-        auto bulletExplor = Sprite::create("images/explosion-sheet/explosion-1.png");
-        Animate* animateExplor = Animate::create(AnimationCache::getInstance()->getAnimation("explorAnimation"));
-        bulletExplor->setScale(0.2);
-        bulletExplor->setPosition(p);
-        this->addChild(bulletExplor, 2);
-        bulletExplor->runAction(Sequence::createWithTwoActions(animateExplor, RemoveSelf::create()));
-        this->removeChild(a->getNode(), true);
-        g_isFinish = false;
-    }
-    //BULLET contact with FLAG
-
-    if (a->getCollisionBitmask() == FLAG_MASK & b->getCollisionBitmask() == BULLET_MASK ||
-        a->getCollisionBitmask() == BULLET_MASK & b->getCollisionBitmask() == FLAG_MASK)
-    {
-        Point p = contact.getContactData()->points[0];
-
-        auto bulletExplor = Sprite::create("images/explosion-sheet/explosion-1.png");
-        Animate* animateExplor = Animate::create(AnimationCache::getInstance()->getAnimation("explorAnimation"));
-        bulletExplor->setScale(0.2);
-        bulletExplor->setPosition(p);
-        this->addChild(bulletExplor, 2);
-        bulletExplor->runAction(Sequence::createWithTwoActions(animateExplor, RemoveSelf::create()));
-        this->removeChild(a->getNode(), true);
-
-        g_isFinish = false;
-
-        //load game over scene
-    }
-    //BULLET_AI contact with FLAG
-
+     //BULLET_AI contact with FLAG
     if (a->getCollisionBitmask() == FLAG_MASK & b->getCollisionBitmask() == BULLET_AI_MASK ||
         a->getCollisionBitmask() == BULLET_AI_MASK & b->getCollisionBitmask() == FLAG_MASK)
     {
@@ -836,7 +916,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         bulletExplor->runAction(Sequence::createWithTwoActions(animateExplor, RemoveSelf::create()));
         this->removeChild(a->getNode(), true);
 
-      //  g_isFinish = false;
+        //  g_isFinish = false;
         auto scene = GameOverScene::createScene(0);
         Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
         //load game over scene
@@ -859,21 +939,9 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
 
         auto scene = GameOverScene::createScene(1);
         Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
-        g_isFinish = false;
+        g_playerIsShot = false;
     }
 
-    //TANK contact with BRICK
-    if ((a->getCollisionBitmask() == BRICK_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == BRICK_MASK))
-    {
-       // Point p = contact.getContactData()->points[0];
-        g_playerIsMoving = false;
-        if(_player->getRotation()==0){ _player->setPosition((_player->getPosition() + Vec2(0.0f,-tankSpeed))); }
-        if(_player->getRotation()==-90){ _player->setPosition((_player->getPosition() + Vec2(tankSpeed,0.0f))); }
-        if(_player->getRotation()==90){ _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
-        if(_player->getRotation()==180){ _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
-
-    }
     //AI contact with BRICK
     if ((a->getCollisionBitmask() == BRICK_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == BRICK_MASK))
@@ -885,6 +953,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         if (_ai->getRotation() == 180) { _ai->setPosition((_ai->getPosition() + Vec2(0.f, tankSpeed))); }
 
     }
+
     //AI contact with FLAG
     if ((a->getCollisionBitmask() == FLAG_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == FLAG_MASK))
@@ -896,25 +965,13 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         if (_ai->getRotation() == 180) { _ai->setPosition((_ai->getPosition() + Vec2(0.f, tankSpeed))); }
 
     }
-    //TANK contact with 4 EDGE
-    if ((a->getCollisionBitmask() == OBSTACLE_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == OBSTACLE_MASK))
-    {
-        // Point p = contact.getContactData()->points[0];
-        g_playerIsMoving = false;
-        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
-        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
-
-    }
-    //AI contact with 4 EDGE
+       //AI contact with 4 EDGE
     if ((a->getCollisionBitmask() == OBSTACLE_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == OBSTACLE_MASK))
     {
         // Point p = contact.getContactData()->points[0];
         g_aiDr = 1;
-      //  g_aiIsShot = true;
+        //  g_aiIsShot = true;
         g_aiIsMoving = false;
         if (_ai->getRotation() == 0) { _ai->setPosition((_ai->getPosition() + Vec2(0.0f, -tankSpeed))); }
         if (_ai->getRotation() == -90) { _ai->setPosition((_ai->getPosition() + Vec2(tankSpeed, 0.0f))); }
@@ -922,18 +979,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         if (_ai->getRotation() == 180) { _ai->setPosition((_ai->getPosition() + Vec2(0.f, tankSpeed))); }
 
     }
-    //TANK contact with STEEL
-    if ((a->getCollisionBitmask() == STEEL_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == STEEL_MASK))
-    {
-        g_playerIsMoving = false;
-        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
-        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
-
-    }
-    //AI contact with STEEL
+     //AI contact with STEEL
     if ((a->getCollisionBitmask() == STEEL_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == STEEL_MASK))
     {
@@ -944,16 +990,7 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         if (_ai->getRotation() == 180) { _ai->setPosition((_ai->getPosition() + Vec2(0.f, tankSpeed))); }
 
     }
-    
-    //TANK contact with GRASS
-    if ((a->getCollisionBitmask() == GRASS_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == GRASS_MASK))
-    {
-        _grass->setOpacity(0.4);
-        _grass->setZOrder(10);
-        _player->setZOrder(9);
-    }
-    //AI contact with GRASS
+     //AI contact with GRASS
     if ((a->getCollisionBitmask() == GRASS_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == GRASS_MASK))
     {
@@ -961,19 +998,8 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
         _grass->setZOrder(10);
         _ai->setZOrder(9);
     }
-    //TANK contact with WATER
-    if ((a->getCollisionBitmask() == WATER_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == WATER_MASK))
-    {
-        g_playerIsMoving = false;
-        if (_player->getRotation() == 0) { _player->setPosition((_player->getPosition() + Vec2(0.0f, -tankSpeed))); }
-        if (_player->getRotation() == -90) { _player->setPosition((_player->getPosition() + Vec2(tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 90) { _player->setPosition((_player->getPosition() + Vec2(-tankSpeed, 0.0f))); }
-        if (_player->getRotation() == 180) { _player->setPosition((_player->getPosition() + Vec2(0.f, tankSpeed))); }
 
-
-    }
-    //AI contact with WATER
+   //AI contact with WATER
     if ((a->getCollisionBitmask() == WATER_MASK & b->getCollisionBitmask() == AI_MASK) ||
         (a->getCollisionBitmask() == AI_MASK & b->getCollisionBitmask() == WATER_MASK))
     {
@@ -985,18 +1011,28 @@ bool HelloWorld::onContactBegin(const PhysicsContact& contact) {
 
 
     }
-    //TANK contact with FROZEN
-    if ((a->getCollisionBitmask() == FROZEN_MASK & b->getCollisionBitmask() == TANK_MASK) ||
-        (a->getCollisionBitmask() == TANK_MASK & b->getCollisionBitmask() == FROZEN_MASK))
-    {
-        tankSpeed =1;
-    }
-   
     return true;
 }
 void HelloWorld::onContactSeparate(const PhysicsContact& contact) {
-    g_playerIsMoving = true;
-    g_aiIsMoving = true;
+
+    PhysicsBody* a = contact.getShapeA()->getBody();
+    PhysicsBody* b = contact.getShapeB()->getBody();
+    if (a->getCollisionBitmask() == TANK_MASK )
+    {
+        g_playerIsMoving = true;
+    }
+    if (a->getCollisionBitmask() == AI_MASK)
+    {
+        g_aiIsMoving = true;
+    }
+    if (b->getCollisionBitmask() == TANK_MASK)
+    {
+        g_playerIsMoving = true;
+    }
+    if (b->getCollisionBitmask() == AI_MASK)
+    {
+        g_aiIsMoving = true;
+    }
     tankSpeed = 2;
 }
 void HelloWorld::aiCheck() {
@@ -1020,7 +1056,7 @@ void HelloWorld::aiCheck() {
 
             animate,
             MoveBy::create(2, Point(0, -_visibleSize.height)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)),
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteAIMoveFinished, this)),
             NULL));
 
         auto projectileBody = PhysicsBody::createBox(bullet->getContentSize());
@@ -1061,7 +1097,7 @@ void HelloWorld::aiCheck() {
         bullet->runAction(Sequence::create(
             animate,
             MoveBy::create(2, Point(-_visibleSize.width, 0)),
-            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteMoveFinished, this)), NULL));
+            CallFuncN::create(CC_CALLBACK_1(HelloWorld::spriteAIMoveFinished, this)), NULL));
         g_aiIsShot = true;
         g_aiIsMoving = true;
       
@@ -1105,10 +1141,10 @@ void HelloWorld::updatePlayer(float dt) {
             if ((int)_ai->getRotation() == -90) {
                 setAIPosition(ccp(_ai->getPosition().x - tankSpeed, _ai->getPosition().y));
             }
-
+            
         }
         else {
-            this->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=] {
+            _ai->runAction(Sequence::create(DelayTime::create(2), CallFunc::create([=] {
                 aiCheck();}), NULL));
             // g_aiIsShot = false;
 
